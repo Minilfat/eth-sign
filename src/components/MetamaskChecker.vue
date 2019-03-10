@@ -1,7 +1,31 @@
 <template>
-  <div class="her">
-    <h1 v-if="status==='locked'">Please, unlock you metamask</h1>
-    <h1 v-if="status === 'notDetected'">Install Metamask</h1>
+  <div class="wrapper flex">
+    <div class="main-content">
+      <md-card>
+        <md-card-header>
+          <md-avatar>
+            <img src="../assets/metamask.svg">
+          </md-avatar>
+
+          <div class="md-title">Metamask</div>
+          <div class="md-subhead">brings Ethereum to your browser</div>
+        </md-card-header>
+
+        <template v-if="status === 'notDetected'">
+          <md-card-content>
+            We were not able to find Metamask installed in your browser. To continue work with app
+            install Metamask, please.
+          </md-card-content>
+          <md-card-actions>
+            <md-button>Install now</md-button>
+          </md-card-actions>
+        </template>
+
+        <template v-if="status === 'locked'">
+          <md-card-content>Please, unlock your Metamask account to continue.</md-card-content>
+        </template>
+      </md-card>
+    </div>
   </div>
 </template>
 
@@ -31,9 +55,19 @@ export default {
 </script>
 
 <style scoped>
-.her {
-  width: 100px;
-  height: 100px;
-  background: yellow;
+.wrapper {
+  background: grey;
+  width: 100vw;
+  height: 100vh;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-content {
+  width: 80%;
 }
 </style>
