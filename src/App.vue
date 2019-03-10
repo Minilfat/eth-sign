@@ -1,61 +1,32 @@
 <template>
-  <div id="app">
-    <h1 v-if="!status">Checking Metamask Status</h1>
-    <h1 v-if="status==='unlocked'">{{ address }}</h1>
-    <h1 v-if="status==='locked'">Please, unlock you metamask</h1>
-    <h1 v-if="status === 'notDetected'">Install Metamask</h1>
+  <div>
+    <metamask-checker v-if="!goFurther" @status-changed="_gavna"></metamask-checker>
+    <eth-sign v-else>sdgjknsglsdlg</eth-sign>
   </div>
 </template>
 
 <script>
-import { web3, getMetamaskStatus } from "./util/detect-metamask.js";
+import MetamaskChecker from "./components/MetamaskChecker";
+import EthSign from "./components/EthSign";
 
 export default {
   name: "app",
+  components: {
+    MetamaskChecker,
+    EthSign
+  },
   data() {
     return {
-      status: "",
-      address: ""
+      goFurther: false
     };
   },
-
   methods: {
-    _checkMetamaskStatus() {
-      let status = getMetamaskStatus();
-      this.status = status;
-
-      switch (status) {
-        case "notDetected":
-          break;
-        case "unlocked":
-          this.address = web3.eth.accounts[0];
-          break;
-        case "locked":
-          setTimeout(this._checkMetamaskStatus, 1000);
-          break;
-      }
+    _gavna(value) {
+      console.log(value);
+      this.goFurther = value === "unlocked";
     }
-  },
-
-  mounted() {
-    this._checkMetamaskStatus();
-    window.addEventListener("load", this._checkMetamaskStatus);
   }
 };
 </script>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1,
-h2 {
-  font-weight: normal;
-}
-</style>
+<style></style>
