@@ -14,14 +14,23 @@
           <div class="md-subhead">Your address</div>
         </div>
       </div>
-      <md-card class="input-block">
+      <md-card class="input-block" v-if="signature.length === 0">
         <md-input-container md-clearable :class="{'md-input-invalid': messageToSign.length === 0}">
           <label>Type your message here</label>
           <md-input required v-model="messageToSign"></md-input>
           <span class="md-error">Can not be empty</span>
         </md-input-container>
         <md-card-actions>
-          <md-button class="md-raised md-dense">Sign</md-button>
+          <md-button class="md-raised md-dense" @click="signMessage">Sign</md-button>
+        </md-card-actions>
+      </md-card>
+      <md-card v-else>
+        <md-card-content>
+          <div>Signature:</div>
+          <div class="signature">{{ signature }}</div>
+        </md-card-content>
+        <md-card-actions>
+          <md-button class="md-raised md-dense" @click="reset">Reset</md-button>
         </md-card-actions>
       </md-card>
     </md-card>
@@ -35,8 +44,26 @@ export default {
   data() {
     return {
       address: web3.eth.coinbase,
-      messageToSign: "Some random message"
+      messageToSign: "Some random message",
+      signature: ""
     };
+  },
+  methods: {
+    signMessage() {
+      if (this.messageToSign.length === 0) return;
+
+      web3.personal.sign(
+        web3.fromUtf8(this.messageToSign),
+        this.address,
+        (err, signature) => {
+          if (err) return;
+          this.signature = signature;
+        }
+      );
+    },
+    reset() {
+      this.signature = "";
+    }
   }
 };
 </script>
@@ -97,5 +124,9 @@ export default {
   height: 50px;
   width: 50px;
   border-radius: 50%;
+}
+
+.signature {
+  word-break: break-all;
 }
 </style>

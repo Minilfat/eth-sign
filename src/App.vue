@@ -1,7 +1,7 @@
 <template>
   <div>
-    <metamask-checker v-if="!goFurther" @status-changed="_gavna"></metamask-checker>
-    <eth-sign v-else>sdgjknsglsdlg</eth-sign>
+    <metamask-checker v-if="checkerIsShown" @status-changed="_updateUI"></metamask-checker>
+    <eth-sign v-else></eth-sign>
   </div>
 </template>
 
@@ -17,13 +17,12 @@ export default {
   },
   data() {
     return {
-      goFurther: false
+      checkerIsShown: true
     };
   },
   methods: {
-    _gavna(value) {
-      console.log(value);
-      this.goFurther = value === "unlocked";
+    _updateUI(value) {
+      this.checkerIsShown = !(value === "unlocked");
     }
   }
 };
