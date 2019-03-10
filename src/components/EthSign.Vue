@@ -27,13 +27,22 @@
       <md-card v-else>
         <md-card-content>
           <div>Signature:</div>
-          <div class="signature">{{ signature }}</div>
+          <div class="flex">
+            <div class="signature">{{ signature }}</div>
+            <md-icon
+              class="md-mini icon"
+              v-clipboard:copy="signature"
+              v-clipboard:success="onCopy"
+            >content_copy</md-icon>
+            <md-icon @click.native="reset" class="md-mini icon">clear</md-icon>
+          </div>
         </md-card-content>
-        <md-card-actions>
-          <md-button class="md-raised md-dense" @click="reset">Reset</md-button>
-        </md-card-actions>
       </md-card>
     </md-card>
+
+    <md-snackbar class="toast" :md-position="'bottom center'" ref="snackbar">
+      <span>Signature was copied.</span>
+    </md-snackbar>
   </div>
 </template>
 
@@ -49,6 +58,9 @@ export default {
     };
   },
   methods: {
+    onCopy() {
+      this.$refs.snackbar.open();
+    },
     signMessage() {
       if (this.messageToSign.length === 0) return;
 
@@ -102,7 +114,7 @@ export default {
 }
 
 .address-block {
-  background-color: #6b85df;
+  background-color: #3f51b5;
   padding: 8px;
 }
 
@@ -128,5 +140,15 @@ export default {
 
 .signature {
   word-break: break-all;
+
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  margin-left: 8px;
 }
 </style>
