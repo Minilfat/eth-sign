@@ -13,7 +13,7 @@
 
         <template v-if="status === 'notDetected'">
           <md-card-content>
-            We were not able to find Metamask installed in your browser. To continue work with app
+            We were not able to find Metamask installed in your browser. To continue work with the app
             install Metamask, please.
           </md-card-content>
           <md-card-actions>
