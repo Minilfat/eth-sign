@@ -17,7 +17,7 @@
             install Metamask, please.
           </md-card-content>
           <md-card-actions>
-            <md-button>Install now</md-button>
+            <md-button href="https://metamask.io/">Install now</md-button>
           </md-card-actions>
         </template>
 
