@@ -41,25 +41,26 @@
     </md-card>
 
     <md-snackbar class="toast" :md-position="'bottom center'" ref="snackbar">
-      <span>Signature was copied.</span>
+      <span>{{ toastMessage }}</span>
     </md-snackbar>
   </div>
 </template>
 
 <script>
-import { web3, addressChangeWatcher } from "../util/detect-metamask.js";
+import { web3 } from "../util/detect-metamask.js";
 export default {
   name: "eth-sign",
   data() {
     return {
       address: web3.eth.coinbase,
       messageToSign: "Some random message",
-      signature: ""
+      signature: "",
+      toastMessage: ""
     };
   },
   methods: {
     onCopy() {
-      this.$refs.snackbar.open();
+      this._openToast("Signature was copied.");
     },
     signMessage() {
       if (this.messageToSign.length === 0) return;
@@ -75,13 +76,30 @@ export default {
     },
     reset() {
       this.signature = "";
+    },
+    _openToast(message) {
+      this.toastMessage = message;
+      this.$refs.snackbar.open();
+    },
+    _addressChangeWatcher(accounts) {
+      let newAddress = accounts[0];
+
+      if (this.address && newAddress && this.address !== newAddress) {
+        this.reset();
+        this.address = newAddress;
+        this._openToast("Account was changed.");
+      }
+      this.$emit("address-changed", newAddress);
     }
   },
   mounted() {
-    addressChangeWatcher(newAddress => {
-      this.address = newAddress;
-      this.$emit("address-changed", this.address);
-    });
+    window.ethereum.on("accountsChanged", this._addressChangeWatcher);
+  },
+  beforeDestroy() {
+    window.ethereum.removeListener(
+      "accountsChanged",
+      this._addressChangeWatcher
+    );
   }
 };
 </script>

@@ -39,15 +39,12 @@ export default {
   methods: {
     _checkMetamaskStatus() {
       getMetamaskStatus()
-        .then(addresses => {
-          this.status = "unlocked";
-          this.$emit("status-changed", this.status);
-        })
-        .catch(err => {
-          console.log(err);
-          this.status = "notDetected";
-          this.$emit("status-changed", this.status);
-        });
+        .then(() => this.__changeStatus("unlocked"))
+        .catch(err => this.__changeStatus("notDetected"));
+    },
+    __changeStatus(status) {
+      this.status = status;
+      this.$emit("status-changed", status);
     }
   },
 
