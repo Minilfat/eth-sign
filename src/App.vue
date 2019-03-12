@@ -1,7 +1,7 @@
 <template>
   <div>
     <metamask-checker v-if="checkerIsShown" @status-changed="_updateUI"></metamask-checker>
-    <eth-sign v-else></eth-sign>
+    <eth-sign v-else @address-changed="_checkAddress"></eth-sign>
   </div>
 </template>
 
@@ -22,7 +22,12 @@ export default {
   },
   methods: {
     _updateUI(value) {
-      this.checkerIsShown = !(value === "unlocked");
+      this.checkerIsShown = value === "notDetected";
+    },
+    _checkAddress(address) {
+      if (!address) {
+        this.checkerIsShown = true;
+      }
     }
   }
 };

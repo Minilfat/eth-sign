@@ -20,17 +20,13 @@
             <md-button href="https://metamask.io/">Install now</md-button>
           </md-card-actions>
         </template>
-
-        <template v-if="status === 'locked'">
-          <md-card-content>Please, unlock your Metamask account to continue.</md-card-content>
-        </template>
       </md-card>
     </div>
   </div>
 </template>
 
 <script>
-import { web3, getMetamaskStatus } from "../util/detect-metamask.js";
+import { getMetamaskStatus } from "../util/detect-metamask.js";
 
 export default {
   name: "metamask-checker",
@@ -42,9 +38,16 @@ export default {
 
   methods: {
     _checkMetamaskStatus() {
-      this.status = getMetamaskStatus();
-      this.$emit("status-changed", this.status);
-      if (this.status === "locked") setTimeout(this._checkMetamaskStatus, 2000);
+      getMetamaskStatus()
+        .then(addresses => {
+          this.status = "unlocked";
+          this.$emit("status-changed", this.status);
+        })
+        .catch(err => {
+          console.log(err);
+          this.status = "notDetected";
+          this.$emit("status-changed", this.status);
+        });
     }
   },
 

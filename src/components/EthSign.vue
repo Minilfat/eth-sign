@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { web3 } from "../util/detect-metamask.js";
+import { web3, addressChangeWatcher } from "../util/detect-metamask.js";
 export default {
   name: "eth-sign",
   data() {
@@ -76,6 +76,12 @@ export default {
     reset() {
       this.signature = "";
     }
+  },
+  mounted() {
+    addressChangeWatcher(newAddress => {
+      this.address = newAddress;
+      this.$emit("address-changed", this.address);
+    });
   }
 };
 </script>

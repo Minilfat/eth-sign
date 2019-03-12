@@ -1,12 +1,13 @@
-export const web3 = window.Web3
-  ? new window.Web3(window.web3.currentProvider)
+export const web3 = window.ethereum
+  ? new window.Web3(window.ethereum)
   : undefined;
 
-
 export function getMetamaskStatus() {
-  if (web3) {
-    return web3.eth.accounts[0] ? "unlocked" : "locked";
-  }
+  return web3 ? window.ethereum.enable() : Promise.reject(new Error("Metamask not found"))
+}
 
-  return "notDetected";
+export function addressChangeWatcher(cb) {
+  window.ethereum.on("accountsChanged", accounts => {
+    cb(accounts[0]);
+  });
 }
